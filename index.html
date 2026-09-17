@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>오늘 비가 올 확률 & 강수량 진단기</title>
+    <title>오늘 우산 챙길까?</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +32,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 20px 15px;
             color: var(--text-main);
             transition: background 0.8s ease;
         }
@@ -44,7 +44,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 28px;
-            padding: 35px 25px;
+            padding: 30px 20px;
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(255, 255, 255, 0.5);
             text-align: center;
@@ -70,7 +70,6 @@
             color: #64748b;
         }
 
-        /* 위치 표시 박스 */
         .location-box {
             background: rgba(255, 255, 255, 0.7);
             border-radius: 16px;
@@ -86,7 +85,6 @@
             font-weight: 500;
         }
 
-        /* 메인 버튼 */
         .check-btn {
             width: 100%;
             padding: 16px;
@@ -110,10 +108,9 @@
             box-shadow: 0 12px 25px rgba(37, 99, 235, 0.4);
         }
 
-        /* 로딩 스피너 */
         .loading-box {
             display: none;
-            margin: 30px 0;
+            margin: 25px 0;
         }
 
         .spinner {
@@ -131,7 +128,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 결과 표시 영역 */
         .result-container {
             display: none;
             margin-top: 25px;
@@ -144,7 +140,7 @@
         }
 
         .weather-status {
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             margin-bottom: 10px;
             color: #1e293b;
         }
@@ -170,17 +166,16 @@
         }
 
         .data-card .value {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             font-weight: 900;
             color: #0f172a;
         }
 
         .data-card .value span {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 500;
         }
 
-        /* 우산 가이드 카드 */
         .umbrella-card {
             background: #ffffff;
             border-radius: 20px;
@@ -205,7 +200,7 @@
         }
 
         .umbrella-title {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 8px;
             display: flex;
@@ -219,9 +214,145 @@
         .umbrella-card.safe .umbrella-title { color: #059669; }
 
         .umbrella-desc {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #334155;
             line-height: 1.5;
+        }
+
+        /* --- 체크리스트 섹션 --- */
+        .checklist-container {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .checklist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .checklist-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checklist-progress {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+
+        .checklist-input-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .checklist-input-box input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .checklist-input-box input:focus {
+            border-color: #3b82f6;
+        }
+
+        .add-item-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .add-item-btn:hover {
+            background: #2563eb;
+        }
+
+        .checklist-ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s;
+        }
+
+        .checklist-item.checked {
+            background: #f8fafc;
+            opacity: 0.65;
+        }
+
+        .checklist-item.checked .item-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .item-left input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+
+        .item-text {
+            font-size: 0.9rem;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ef4444;
         }
 
         footer {
@@ -235,8 +366,8 @@
 
     <div class="container">
         <header>
-            <h1><i class="fa-solid fa-cloud-sun-rain" style="color: #3b82f6;"></i> 오늘 비 올 확률 & 강수량</h1>
-            <p>API 키 없이 내 위치 기반 실시간 측정</p>
+            <h1><i class="fa-solid fa-umbrella" style="color: #3b82f6;"></i> 오늘 우산 챙길까?</h1>
+            <p>내 위치 기반 실시간 강수확률 & 준비물 체크리스트</p>
         </header>
 
         <!-- 위치 정보 -->
@@ -284,8 +415,25 @@
             </div>
         </div>
 
+        <!-- 外出 준비물 체크리스트 섹션 -->
+        <div class="checklist-container">
+            <div class="checklist-header">
+                <h2><i class="fa-solid fa-list-check" style="color: #3b82f6;"></i> 외출 소지품 체크리스트</h2>
+                <span class="checklist-progress" id="progressText">0 / 0 완료</span>
+            </div>
+
+            <div class="checklist-input-box">
+                <input type="text" id="itemInput" placeholder="추가할 소지품 입력 (예: 텀블러)" onkeypress="if(event.key==='Enter') addItem()">
+                <button class="add-item-btn" onclick="addItem()"><i class="fa-solid fa-plus"></i></button>
+            </div>
+
+            <ul class="checklist-ul" id="checklistUl">
+                <!-- JS에서 동적 생성 -->
+            </ul>
+        </div>
+
         <footer>
-            <p>© 2026 Location-based Weather • Keyless Open API</p>
+            <p>© 2026 오늘 우산 챙길까? • Location-based Weather Checklist</p>
         </footer>
     </div>
 
@@ -293,15 +441,27 @@
         let userLat = 37.5665; // 기본값: 서울 위도
         let userLon = 126.9780; // 기본값: 서울 경도
 
-        // 페이지 로드 시 위치 파악
+        // 기본 소지품 리스트
+        const defaultItems = [
+            { id: 1, text: "📱 스마트폰", checked: false },
+            { id: 2, text: "💳 지갑 / 교통카드", checked: false },
+            { id: 3, text: "🔑 집열쇠 / 차키", checked: false },
+            { id: 4, text: "🎧 이어폰 / 에어팟", checked: false }
+        ];
+
+        let items = [];
+
         window.onload = function() {
+            initLocation();
+            loadChecklist();
+        };
+
+        function initLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     async (pos) => {
                         userLat = pos.coords.latitude;
                         userLon = pos.coords.longitude;
-                        
-                        // 역지오코딩으로 실제 행정구역 이름 가져오기
                         try {
                             const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLat}&lon=${userLon}&accept-language=ko`);
                             const data = await res.json();
@@ -319,9 +479,88 @@
             } else {
                 document.getElementById('locationName').innerText = "서울특별시 (기본 위치)";
             }
-        };
+        }
 
-        // 오픈 API(Open-Meteo)를 이용한 강수확률 및 강수량 조회 (API KEY 불필요)
+        // 체크리스트 로드
+        function loadChecklist() {
+            const saved = localStorage.getItem('umbrella_app_checklist');
+            if (saved) {
+                items = JSON.parse(saved);
+            } else {
+                items = [...defaultItems];
+                saveChecklist();
+            }
+            renderChecklist();
+        }
+
+        // 체크리스트 저장
+        function saveChecklist() {
+            localStorage.setItem('umbrella_app_checklist', JSON.stringify(items));
+        }
+
+        // 체크리스트 렌더링
+        function renderChecklist() {
+            const ul = document.getElementById('checklistUl');
+            ul.innerHTML = '';
+
+            let completedCount = 0;
+
+            items.forEach(item => {
+                if (item.checked) completedCount++;
+
+                const li = document.createElement('li');
+                li.className = `checklist-item ${item.checked ? 'checked' : ''}`;
+
+                li.innerHTML = `
+                    <div class="item-left" onclick="toggleItem(${item.id})">
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} onclick="event.stopPropagation(); toggleItem(${item.id})">
+                        <span class="item-text">${escapeHtml(item.text)}</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+                `;
+                ul.appendChild(li);
+            });
+
+            document.getElementById('progressText').innerText = `${completedCount} / ${items.length} 완료`;
+        }
+
+        // 항목 추가
+        function addItem() {
+            const input = document.getElementById('itemInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const newItem = {
+                id: Date.now(),
+                text: text,
+                checked: false
+            };
+
+            items.push(newItem);
+            saveChecklist();
+            renderChecklist();
+            input.value = '';
+        }
+
+        // 항목 토글
+        function toggleItem(id) {
+            items = items.map(item => item.id === id ? { ...item, checked: !item.checked } : item);
+            saveChecklist();
+            renderChecklist();
+        }
+
+        // 항목 삭제
+        function deleteItem(id) {
+            items = items.filter(item => item.id !== id);
+            saveChecklist();
+            renderChecklist();
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // 기상 데이터 조회 및 자동 우산 체크리스트 연동
         async function getRainData() {
             const loading = document.getElementById('loading');
             const resultContainer = document.getElementById('resultContainer');
@@ -330,14 +569,12 @@
             loading.style.display = 'block';
 
             try {
-                // Open-Meteo API (무료, 인증키 없음, GPS 좌표 기반)
                 const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&daily=precipitation_probability_max,precipitation_sum&timezone=auto`;
                 const response = await fetch(url);
                 const data = await response.json();
 
-                // 오늘 데이터 추출
-                const maxPop = data.daily.precipitation_probability_max[0] || 0; // 최고 강수확률 (%)
-                const rainSum = data.daily.precipitation_sum[0] || 0;             // 총 강수량 (mm)
+                const maxPop = data.daily.precipitation_probability_max[0] || 0;
+                const rainSum = data.daily.precipitation_sum[0] || 0;
 
                 loading.style.display = 'none';
                 resultContainer.style.display = 'block';
@@ -345,7 +582,7 @@
                 updateUI(maxPop, rainSum);
             } catch (err) {
                 console.error(err);
-                alert("기상 데이터를 불러오지 못했습니다. 네트워크 상태를 확인해주세요.");
+                alert("기상 데이터를 불러오지 못했습니다.");
                 loading.style.display = 'none';
             }
         }
@@ -359,13 +596,18 @@
             const desc = document.getElementById('umbrellaDesc');
             const icon = document.getElementById('weatherIcon');
 
+            // 강수확률이 높을 경우 체크리스트에 '☔ 우산' 자동 추가
+            if (pop >= 30 || rainAmount > 0) {
+                ensureUmbrellaInChecklist();
+            }
+
             if (pop >= 60 || rainAmount >= 5.0) {
                 document.body.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
                 icon.innerHTML = '<i class="fa-solid fa-cloud-showers-heavy" style="color: #818cf8;"></i>';
                 
                 card.className = "umbrella-card danger";
                 title.innerHTML = '<i class="fa-solid fa-umbrella"></i> 우산 꼭 챙기세요!';
-                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 빗길 대비 장우산을 준비하세요!`;
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 장우산을 체크리스트에 넣었습니다!`;
             } 
             else if (pop >= 30 || rainAmount > 0) {
                 document.body.style.background = "linear-gradient(135deg, #f6d365 0%, #fda085 100%)";
@@ -373,7 +615,7 @@
                 
                 card.className = "umbrella-card warning";
                 title.innerHTML = '<i class="fa-solid fa-umbrella"></i> 접이식 우산 추천!';
-                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 가방에 휴대용 우산을 넣어두세요.`;
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 휴대용 우산을 챙겨주세요!`;
             } 
             else {
                 document.body.style.background = "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)";
@@ -381,7 +623,20 @@
                 
                 card.className = "umbrella-card safe";
                 title.innerHTML = '<i class="fa-solid fa-face-smile"></i> 우산 안 챙겨도 돼요!';
-                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>이며 비 소식이 없습니다. 가벼운 차림으로 외출하셔도 좋습니다.`;
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>이며 비 소식이 없습니다. 가벼운 발걸음으로 출발하세요!`;
+            }
+        }
+
+        function ensureUmbrellaInChecklist() {
+            const hasUmbrella = items.some(item => item.text.includes("우산"));
+            if (!hasUmbrella) {
+                items.unshift({
+                    id: Date.now(),
+                    text: "☔ 우산 (비 예보)",
+                    checked: false
+                });
+                saveChecklist();
+                renderChecklist();
             }
         }
     </script>
