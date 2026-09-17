@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘 비가 올 확률 & 강수량 진단기</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-gradient-default: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --text-main: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.90);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-gradient-default);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-main);
+            transition: background 0.8s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 35px 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        /* 위치 표시 박스 */
+        .location-box {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 16px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        /* 메인 버튼 */
+        .check-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        /* 로딩 스피너 */
+        .loading-box {
+            display: none;
+            margin: 30px 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 결과 표시 영역 */
+        .result-container {
+            display: none;
+            margin-top: 25px;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .weather-status {
+            font-size: 3.8rem;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            padding: 15px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .data-card .label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .data-card .value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .data-card .value span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* 우산 가이드 카드 */
+        .umbrella-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+        }
+
+        .umbrella-card.danger {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .umbrella-card.warning {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .umbrella-card.safe {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .umbrella-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .umbrella-card.danger .umbrella-title { color: #dc2626; }
+        .umbrella-card.warning .umbrella-title { color: #d97706; }
+        .umbrella-card.safe .umbrella-title { color: #059669; }
+
+        .umbrella-desc {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        footer {
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-cloud-sun-rain" style="color: #3b82f6;"></i> 오늘 비 올 확률 & 강수량</h1>
+            <p>API 키 없이 내 위치 기반 실시간 측정</p>
+        </header>
+
+        <!-- 위치 정보 -->
+        <div class="location-box">
+            <i class="fa-solid fa-location-dot" style="color: #ef4444;"></i>
+            <span id="locationName">내 위치 찾는 중...</span>
+        </div>
+
+        <!-- 메인 버튼 -->
+        <button class="check-btn" onclick="getRainData()">
+            <i class="fa-solid fa-umbrella"></i> 실시간 강수확률 & 강수량 확인
+        </button>
+
+        <!-- 로딩 표시 -->
+        <div class="loading-box" id="loading">
+            <div class="spinner"></div>
+            <p style="font-size: 0.9rem; color: #475569;">위치 기반 기상 데이터 분석 중...</p>
+        </div>
+
+        <!-- 결과 표시 영역 -->
+        <div class="result-container" id="resultContainer">
+            <div class="weather-status" id="weatherIcon">
+                <i class="fa-solid fa-cloud-showers-heavy"></i>
+            </div>
+
+            <div class="data-grid">
+                <div class="data-card">
+                    <div class="label">오늘 최고 강수확률</div>
+                    <div class="value" id="rainPercent">--<span>%</span></div>
+                </div>
+                <div class="data-card">
+                    <div class="label">예상 총 강수량</div>
+                    <div class="value" id="rainAmount">--<span>mm</span></div>
+                </div>
+            </div>
+
+            <!-- 우산 가이드 카드 -->
+            <div class="umbrella-card" id="umbrellaCard">
+                <div class="umbrella-title" id="umbrellaTitle">
+                    <i class="fa-solid fa-umbrella"></i> 진단 결과
+                </div>
+                <div class="umbrella-desc" id="umbrellaDesc">
+                    버튼을 눌러 강수확률을 확인하세요.
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2026 Location-based Weather • Keyless Open API</p>
+        </footer>
+    </div>
+
+    <script>
+        let userLat = 37.5665; // 기본값: 서울 위도
+        let userLon = 126.9780; // 기본값: 서울 경도
+
+        // 페이지 로드 시 위치 파악
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (pos) => {
+                        userLat = pos.coords.latitude;
+                        userLon = pos.coords.longitude;
+                        
+                        // 역지오코딩으로 실제 행정구역 이름 가져오기
+                        try {
+                            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLat}&lon=${userLon}&accept-language=ko`);
+                            const data = await res.json();
+                            const address = data.address;
+                            const district = address.city || address.county || address.borough || address.province || '내 위치';
+                            document.getElementById('locationName').innerText = `${district} (${userLat.toFixed(2)}°, ${userLon.toFixed(2)}°)`;
+                        } catch (e) {
+                            document.getElementById('locationName').innerText = `내 위치 (${userLat.toFixed(2)}°, ${userLon.toFixed(2)}°)`;
+                        }
+                    },
+                    (err) => {
+                        document.getElementById('locationName').innerText = "서울특별시 (기본 위치)";
+                    }
+                );
+            } else {
+                document.getElementById('locationName').innerText = "서울특별시 (기본 위치)";
+            }
+        };
+
+        // 오픈 API(Open-Meteo)를 이용한 강수확률 및 강수량 조회 (API KEY 불필요)
+        async function getRainData() {
+            const loading = document.getElementById('loading');
+            const resultContainer = document.getElementById('resultContainer');
+            
+            resultContainer.style.display = 'none';
+            loading.style.display = 'block';
+
+            try {
+                // Open-Meteo API (무료, 인증키 없음, GPS 좌표 기반)
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${userLat}&longitude=${userLon}&daily=precipitation_probability_max,precipitation_sum&timezone=auto`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // 오늘 데이터 추출
+                const maxPop = data.daily.precipitation_probability_max[0] || 0; // 최고 강수확률 (%)
+                const rainSum = data.daily.precipitation_sum[0] || 0;             // 총 강수량 (mm)
+
+                loading.style.display = 'none';
+                resultContainer.style.display = 'block';
+
+                updateUI(maxPop, rainSum);
+            } catch (err) {
+                console.error(err);
+                alert("기상 데이터를 불러오지 못했습니다. 네트워크 상태를 확인해주세요.");
+                loading.style.display = 'none';
+            }
+        }
+
+        function updateUI(pop, rainAmount) {
+            document.getElementById('rainPercent').innerHTML = `${pop}<span>%</span>`;
+            document.getElementById('rainAmount').innerHTML = `${rainAmount.toFixed(1)}<span>mm</span>`;
+
+            const card = document.getElementById('umbrellaCard');
+            const title = document.getElementById('umbrellaTitle');
+            const desc = document.getElementById('umbrellaDesc');
+            const icon = document.getElementById('weatherIcon');
+
+            if (pop >= 60 || rainAmount >= 5.0) {
+                document.body.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+                icon.innerHTML = '<i class="fa-solid fa-cloud-showers-heavy" style="color: #818cf8;"></i>';
+                
+                card.className = "umbrella-card danger";
+                title.innerHTML = '<i class="fa-solid fa-umbrella"></i> 우산 꼭 챙기세요!';
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 빗길 대비 장우산을 준비하세요!`;
+            } 
+            else if (pop >= 30 || rainAmount > 0) {
+                document.body.style.background = "linear-gradient(135deg, #f6d365 0%, #fda085 100%)";
+                icon.innerHTML = '<i class="fa-solid fa-cloud-sun-rain" style="color: #fbbf24;"></i>';
+                
+                card.className = "umbrella-card warning";
+                title.innerHTML = '<i class="fa-solid fa-umbrella"></i> 접이식 우산 추천!';
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>, 예상 강수량은 <strong>${rainAmount.toFixed(1)}mm</strong>입니다. 가방에 휴대용 우산을 넣어두세요.`;
+            } 
+            else {
+                document.body.style.background = "linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)";
+                icon.innerHTML = '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>';
+                
+                card.className = "umbrella-card safe";
+                title.innerHTML = '<i class="fa-solid fa-face-smile"></i> 우산 안 챙겨도 돼요!';
+                desc.innerHTML = `오늘 강수확률은 <strong>${pop}%</strong>이며 비 소식이 없습니다. 가벼운 차림으로 외출하셔도 좋습니다.`;
+            }
+        }
+    </script>
+</body>
+</html>
